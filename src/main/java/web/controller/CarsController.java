@@ -1,5 +1,6 @@
 package web.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,16 +14,14 @@ import java.util.List;
 
 @Controller
 public class CarsController {
-    private CarDAO carDAO = new CarDAOImpl();
+
+    @Autowired
+    private CarDAO carDAO;
 
     @GetMapping(value = "/cars")
     public String getCars(@RequestParam(value = "amount", required = false) Integer amount, Model model) {
 
-        List<Car> cars = carDAO.getCarList();
-
-        if (amount != null && amount > 0 && amount < 5) {
-            cars = cars.stream().limit(amount).toList();
-        }
+        List<Car> cars = carDAO.getCarList(amount);
 
         model.addAttribute("cars", cars);
 
